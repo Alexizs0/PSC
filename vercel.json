@@ -2,18 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "frontend/index.html",
+      "src": "index.html",
       "use": "@vercel/static"
     },
     {
-      "src": "api/proxy_function.py",
+      "src": "api/proxy.py",
       "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/proxy_function",
-      "dest": "/api/proxy_function.py"
     }
   ]
 }
+
+
