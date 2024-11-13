@@ -3,16 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website</title>
+    <title>Website Proxy Viewer</title>
 </head>
 <body>
-    <h1>Website Viewer</h1>
-    <input type="text" id="url" placeholder="Enter a website URL">
+    <h1>Proxy Website Viewer</h1>
+    <input type="text" id="url" placeholder="Enter a URL to view" />
     <button onclick="loadWebsite()">Load Website</button>
     <div id="content"></div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <script>
+        function loadWebsite() {
+            const url = document.getElementById('url').value;
+            const proxyUrl = `/api/proxy?url=${encodeURIComponent(url)}`;
 
+            fetch(proxyUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.html) {
+                        document.getElementById('content').innerHTML = data.html;
+                    } else {
+                        document.getElementById('content').innerText = 'Failed to fetch the content';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('content').innerText = 'Error: ' + error;
+                });
+        }
+    </script>
+</body>
 </html>
