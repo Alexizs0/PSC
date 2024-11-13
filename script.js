@@ -1,30 +1,34 @@
-document.getElementById("url-form").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent form from submitting normally
-    const url = document.getElementById("url").value;
+import requests
+import json
 
-    // Validate URL input
-    if (url) {
-        const iframeContainer = document.getElementById("iframe-container");
-        iframeContainer.innerHTML = ''; // Clear previous content
+def handler(event, context):
+    url = event['queryStringParameters'].get('url', None)
 
-        // Fetch the content through the proxy function
-        fetch(`/proxy?url=${encodeURIComponent(url)}`)
-            .then(response => {
-                if (response.ok) {
-                    return response.text(); // Return the response text (HTML)
-                } else {
-                    throw new Error('Failed to fetch the URL');
-                }
-            })
-            .then(data => {
-                // Insert the fetched content into the iframe container
-                iframeContainer.innerHTML = data;
-            })
-            .catch(error => {
-                // Handle errors (e.g., network issues, invalid URL, etc.)
-                iframeContainer.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
-            });
-    } else {
-        alert("Please enter a valid URL.");
-    }
-});
+    if not url:
+        return {
+            'statusCode': 400,
+            'body': json.dumps({'error': 'Missing "url" parameter'})
+        }
+
+    try:
+        # Send the request to the target URL
+        response = requests.get(url)
+
+        # If the website uses X-Frame-Options or CSP headers, we may need to bypass or relax them
+        headers = {
+            'Content-Type': response.headers.get('Content-Type', 'text/html'),
+            'Access-Control-Allow-Origin': '*',  # Allow cross-origin requests
+            'X-Frame-Options': 'ALLOWALL',  # Allow the content to be embedded
+            'Content-Security-Policy': 'default-src *; script-src *; style-src *',  # Relax CSP headers
+        }
+
+        return {
+            'statusCode': response.status_code,
+            'headers': headers,
+            'body': response.text  # Return the HTML content as text
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
