@@ -6,7 +6,7 @@ def handler(request):
     url = request.args.get('url')
 
     if not url:
-        return {"statusCode": 400, "body": json.dumps({'error': 'No URL provided'})}
+        return {"statusCode": 400, "body": "No URL provided"}
 
     try:
         # Fetch content from the URL
@@ -15,16 +15,16 @@ def handler(request):
         if response.status_code == 200:
             return {
                 "statusCode": 200,
-                "body": json.dumps({'html': response.text})
+                "body": response.text  # Return the HTML content directly
             }
         else:
             return {
                 "statusCode": 500,
-                "body": json.dumps({'error': 'Failed to fetch content'})
+                "body": "Failed to fetch content"
             }
     except Exception as e:
         return {
             "statusCode": 500,
-            "body": json.dumps({'error': str(e)})
+            "body": f"Error: {str(e)}"
         }
 
