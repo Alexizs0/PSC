@@ -3,25 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PSC</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Website</title>
 </head>
 <body>
-    <header>
-        <h1>Welcome</h1>
-        
-    </header>
-    <section>
-        <h2>Enter URL to Browse</h2>
-        <form id="url-form">
-            <input type="text" id="url" placeholder="Enter a URL" required>
-            <button type="submit">Visit</button>
-        </form>
-        <div id="iframe-container"></div>
-    </section>
-    <footer>
-        <p>&copy; </p>
-    </footer>
+    <h1>Website Viewer</h1>
+    <input type="text" id="url" placeholder="Enter a website URL">
+    <button onclick="loadWebsite()">Load Website</button>
+    <div id="content"></div>
+
     <script src="script.js"></script>
 </body>
+</html>
+
 </html>
